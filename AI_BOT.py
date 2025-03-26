@@ -6,22 +6,11 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 
-# ✅ Load environment variables
 dotenv.load_dotenv()
 
-# ✅ Fetch API Key and Gemini Model
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# ✅ Check API Key
-if not GOOGLE_API_KEY:
-    st.error("⚠️ Missing GOOGLE_API_KEY! Set it in a .env file or manually.")
-    st.stop()
-
-# ✅ Initialize AI Model
-llm = ChatGoogleGenerativeAI(model=GEMINI_MODEL, temperature=0.7, google_api_key=GOOGLE_API_KEY)
-
-# ✅ Define the Most Intelligent AI Chatbot Prompt Template
 TEMPLATE = """
 You are an advanced AI assistant with deep knowledge across various subjects. Your goal is to provide **accurate, detailed, and well-structured answers** to user questions.
 
@@ -67,24 +56,19 @@ You are an advanced AI assistant with deep knowledge across various subjects. Yo
 - Always maintain a **professional, helpful, and neutral** tone.  
 """
 
-# ✅ Create a Prompt Template
 prompt = PromptTemplate.from_template(TEMPLATE)
 
-# ✅ Long-Term Memory Setup (Storing past conversations)
 long_term_memory = ConversationBufferMemory(memory_key="history")
 
-# ✅ Attach Memory to Conversation Chain
 conversation = ConversationChain(
     llm=llm,
     memory=long_term_memory,
     prompt=prompt
 )
 
-# 🎬 **Streamlit App UI**
 st.title("🤖 Most Intelligent AI Chatbot 🧠")
 st.write("Ask me anything! I provide structured, intelligent, and detailed answers.")
 
-# ✅ User Input
 user_input = st.text_input("Enter your question:")
 
 if st.button("Get Answer"):
